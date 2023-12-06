@@ -1,0 +1,41 @@
+<html>
+    <body>
+        <h1> 관리자 대시보드(업로드)</h1>
+        <h3><a href="/dashboard">{유저 대시보드로 이동(다운로드)}</a></h3>
+        <h3><a href="/management"> 유저 관리 페이지로 이동하기 </a></h3>
+<!--        <form action="/api/v1/data/admin/add" method="post">-->
+<!--            &lt;!&ndash; form을 통해 데이터를 전송할 때, method는 post로 설정하고, action은 /api/v1/data/add로 설정합니다. &ndash;&gt;-->
+<!--            &lt;!&ndash; 이 값들은 Spring에서 @PostMapping("/api/v1/data/add")로 설정한 값과 일치해야 합니다. &ndash;&gt;-->
+<!--            업로드할 내용: <input type="text" id="text" name="text"/> <br/>-->
+<!--            <input type="submit" value="업로드"/>-->
+<!--        </form>-->
+        <!-- 업로드 성공 시, /dashboard?success=true로 리다이렉트합니다. -->
+<!--        <span id="message"> </span>-->
+        <ul id="fileList">
+
+        </ul>
+        <form  method="post"action="api/v1/rest/aws/upload" enctype="multipart/form-data">
+            <input name = "file" type="file" value="파일 선택"/><br/>
+            <input type="submit" value="업로드"/><br/>
+        </form>
+
+        <span id="message"> </span>
+    </body>
+    <script>
+        (async () => {
+            const response = await fetch('/api/v1/rest/aws/list');
+            const result = await response.json();
+            console.log(result);
+            for (let i = 0; i < result.length; i++) {
+                let li = document.createElement("li");
+                li.appendChild(document.createTextNode(result[i]));
+                document.getElementById("fileList").appendChild(li);
+            }
+        })()
+
+        let params = new URLSearchParams(window.location.search);
+        if (params.get("success") != null) {
+            document.getElementById("message").innerHTML = "파일 업로드에 성공하였습니다.";
+        }
+    </script>
+</html>
